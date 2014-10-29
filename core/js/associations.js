@@ -1,8 +1,7 @@
 var timeAtStart;		//keep track of time at which the experiment start
 var participant;		//will contain user id, age, gender
 var filename;
-var currentTrial;
-var currentAssociation;
+var cues;
 var debug = true;
 
 $(document).ready(function(){   	
@@ -19,34 +18,30 @@ $(document).ready(function(){
         paddingTop: '30px',
         paddingBottom: '30px',
         afterLoad: function(anchorLink, index){  
-        	if (anchorLink > 0) {
-        		showTrial(anchorLink);        		
+        	if (anchorLink != undefined) {
+        		document.title = anchorLink;    
         	}
         }
-//        onLeave: function(index, nextIndex, direction){console.info('onleave @ '+index);},
-//    	afterRender: function(){console.info('afterrender')},
-//    	afterResize: function(){console.info('afterresise')}
     });
     $.fn.fullpage.setAllowScrolling(false); //we only navigate using the next/previous buttons
     
 	$('#participant-info__nav').bind('click',function(e) {		
-		if(e) e.preventDefault();		
+		if (e) e.preventDefault();		
 		validateParticipantInfo(); //ss clicked ok -> validate their responses, if ok, move on to instructions		
 	});
 	
 	$('#instructions__nav').bind('click',function(e) {		
-		if(e) e.preventDefault();
-		$.fn.fullpage.moveSectionDown();
+		if (e) e.preventDefault();
+		startAssociationTask();
 	});
 
     timeAtStart = getDateTime();
-    initializeAssociationTask();
-    
-//    $("#associations__response").focus();	//focus response box
-//	$("#associations__response").select();
+    cues = getCues(); //defined in ../../input/cues.js
     
     if (debug) {
     	participant = {name: "bram", age: "28", gender: 'm'};		
+    	initWriting();
+    	startAssociationTask();
     }
 });
 
@@ -89,81 +84,131 @@ function validateParticipantInfo() {
 	}
 	
 	if (allValid) {
-		participant = {name: name, age: age, gender: gender};		
+		participant = {name: name, age: age, gender: gender};	
+		initWriting();
 		$.fn.fullpage.moveSectionDown();
 	} else {
 		showMessage("Gelieve alle gegevens in te vullen!", errorString);
 	}
 }
 
-function initializeAssociationTask() {	
-	$('.associations__submit').bind('click',function(e) {		//triggered by 'enter' or clicking 'ok'
+/**
+ * Begin the association task. Runs until all cues have been given three associations by user.
+ */
+function startAssociationTask() {
+	var cue = '';		//the cue the ss is giving associations to
+	var trialNb = 0;	//trial number; 1 .. number of cues (i.e., 3 associations to each cue are all the same trial)
+	var assoIndex = 1;	//1, 2, or 3, depending on whether the association is the first, second, or third association to the current cue
+	
+	//for each association, we'll save RT to first keypress and RT to submit
+	//measured from when cue is displayed or when previous association was submitted, whichever is later
+	var RtStart = -1;					 
+	var rtToSubmit = -1;
+	var rtToKeypress = -1;
+	var firstKeypressRegistered = false;
+	
+	$('#associations__submit').bind('click',function(e) {		//triggered by 'enter' or clicking 'ok'
 		if(e) e.preventDefault();								//make sure we stay on this page
-		var association = currentTrial.responseHandle.val(); 		
-		if (association.length <= 1) { 							//ss did not fill in anything of use
-			currentTrial.errorHandle.html("Gelieve een associatie in te vullen!");	//show error message
+		var association = $('#associations__response').val(); 		
+		if (association.length <= 1) {//ss did not fill in anything of use 	
+			$("#associations__error").html("Gelieve een associatie in te vullen!");	//show error message
+			$("#associations__response").focus();	//focus response box
+			$("#associations__response").select();
 		} else {
-			currentAssociation.response = association;
-			processAssociation(); 					//write away response, move on
+			processAssociation(association); 	//write away response, move on
 		}		
 	});
 	
-	$(".associations__response").keypress(function() {
-		if (!currentAssociation.firstKeypressRegistered) {
-			currentAssociation.firstKeypressRegistered = true;
-			currentAssociation.rtToKeypress = new Date().getTime() - currentAssociation.rtStart;
+	$("#associations__response").keypress(function() {
+		if (!firstKeypressRegistered) {
+			firstKeypressRegistered = true;
+			rtToKeypress = new Date().getTime() - RtStart;
 		}
 	});
 	
-	currentTrial = new Object();
-	currentAssociation = new Object();
-}
+	$('#associations__skip').bind('click',function(e) {	
+		if(e) e.preventDefault();								//make sure we stay on this page
 
-function showTrial(index) {		
-	currentTrial.index = index;
-	currentTrial.cue = $('#associations-' + index).data('cue');
-	currentTrial.responseHandle = $("#associations-" + index + " .associations__response");
-	currentTrial.a1handle = $("#associations-" + index + " .associations__previous--1");
-	currentTrial.a2handle = $("#associations-" + index + " .associations__previous--2");
-	currentTrial.errorHandle = $("#associations-" + index + " .associations__error");
+		if (assoIndex == 1) { //no responses given yet
+			writeResponse(cue, trialNb, '__UNKNOWN__', assoIndex, -1, -1);
+			writeResponse(cue, trialNb, '__UNKNOWN__', assoIndex, -1, -1);
+			writeResponse(cue, trialNb, '__UNKNOWN__', assoIndex, -1, -1);			
+		} else {
+			while (assoIndex <= 3) {
+				writeResponse(cue, trialNb, '__NO_FURTHER__', assoIndex, -1, -1);
+				assoIndex++;				
+			}
+		}				
+		showNextCue();
+	});
 	
-	resetAssociation();
-	currentAssociation.index = 1;	
-	console.info("loaded cue "+index + ", "+currentTrial.cue)
-}
-
-function resetAssociation() {
-	currentAssociation.rtStart = new Date().getTime();  //reset RT
-	currentAssociation.rtToKeypress = -1;
-	currentAssociation.rtToSubmit = -1;		
-	currentAssociation.firstKeypressRegistered = false;
-}
-
-/**
- * Write away response, move on to next association or cue.
- */	
-function processAssociation() {
-	currentAssociation.rtToSubmit = new Date().getTime() - currentAssociation.rtStart;
-	writeResponse(currentTrial, currentAssociation);
-	
-	resetAssociation();
-	
-	//show next association, or next cue
-	if (currentAssociation.index == 1) { //this was ss's first association
-		currentTrial.a1handle.html(currentAssociation.response); //display this association while ss thinks of further associations
-		currentTrial.responseHandle.attr("placeholder", "Geef een tweede associatie");		
-		currentAssociation.index++;		
-	} else if (currentAssociation.index == 2) { 	//this was ss's second association
-		currentTrial.a2handle.html(currentAssociation.response); //display this association while ss thinks of further associations
-		currentTrial.responseHandle.attr("placeholder", "Geef een laatste associatie");
-		currentAssociation.index++;
-	} else {
-		$.fn.fullpage.moveSectionDown(); 
+	/**
+	 * Write away response, move on to next association or cue.
+	 */	
+	function processAssociation(association) {
+		rtToSubmit = new Date().getTime() - RtStart;
+				
+		//start by saving the trial	
+		writeResponse(cue, trialNb, association, assoIndex, rtToKeypress, rtToSubmit);
 		
-//		showNextTrial(); //pp gave three associations -> move to next cue
-	}				
-} 
-
+		//allow for RT measurement of next association
+		firstKeypressRegistered = false;
+		RtStart = new Date().getTime(); 		
+		
+		$("#associations__skip").html("Geen Verdere Associaties");
+		resetElements();
+		
+		assoIndex++;
+		
+		//show next association, or next cue
+		if (assoIndex == 2) { //this was ss's first association
+			$("#associations__previous--1").text(association); //display this association while ss thinks of further associations
+			$("#associations__response").attr("placeholder", "Geef een tweede associatie");		
+		} else if (assoIndex == 3) { 	//this was ss's second association
+			$("#associations__previous--2").text(association); //display this association while ss thinks of further associations
+			$("#associations__response").attr("placeholder", "Geef een laatste associatie");
+		} else {			
+			showNextCue(); //pp gave three associations -> move to next cue
+		}	
+	}
+	
+	function resetElements() {
+		$("#associations__error").html("&nbsp;");  //clear (any) error	
+		$("#associations__response").val('');	//clear response box		
+		$("#associations__response").focus();	//focus response box
+		$("#associations__response").select();
+	}
+	
+	/**
+	 * Display the next cue
+	 */
+	function showNextCue() {
+		resetElements();
+		$("#associations__response").attr("placeholder", "Geef een eerste associatie");
+		$("#associations__skip").html("Onbekend Woord");
+		$(".associations__previous").html("...");		
+		
+		
+		if (cues.length > 0) {
+			cue = cues.shift();
+			trialNb++;
+			assoIndex = 1;
+			$("#associations__cue").html(capitalizeFirst(cue));		
+			RtStart = new Date().getTime(); //reset RT			
+		} else {
+			$.fn.fullpage.moveSectionDown(); //finish experiment
+		}		
+	}
+	
+	function capitalizeFirst(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+	
+	$("#associations__response").focus();	//focus response box
+	$("#associations__response").select();
+	trialNb = 0;
+	showNextCue();	
+}
 
 /**
  * @param title Title of the popup.
@@ -184,7 +229,7 @@ function showMessage(title, message) {
 
 function initWriting() {
 	filename = participant.name + "_" + timeAtStart + ".txt";
-	var header = "EMS\tage\tgender\ttimeAtStart\ttimeAtResponse\tcue\tcueNb\tassociation\tassociationNb\tRT\n";
+	var header = "EMS\tage\tgender\ttimeAtStart\ttimeAtResponse\tcue\tcueNb\tassociation\tassociationNb\trtToKeypress\trtToSubmit\n";
 	
 	writeToDisk(filename, header, false);
 }
@@ -192,20 +237,20 @@ function initWriting() {
 /**
  * Write out all data for this participant to disk.
  */
-function writeResponse(cue, cueNb, association, associationNb, RT) {		
+function writeResponse(cue, cueNb, association, associationNb, rtToKeypress, rtToSubmit) {		
 	var line = participant.name + "\t" + participant.age + "\t" + participant.gender + "\t" + timeAtStart + "\t" + getDateTime() + "\t"
-		+ cue + "\t" + cueNb + "\t" + association + "\t" + associationNb + "\t" + RT + "\n";	
+		+ cue + "\t" + cueNb + "\t" + association + "\t" + associationNb + "\t" + rtToKeypress + "\t" + rtToSubmit + "\n";	
 	writeToDisk(filename, line, true);	
 }
 
 /**
  * Create a file with the indicated data at the indicated location.
  */
-function writeToDisk(filename, data, append) {
+function writeToDisk(filename, data, append) {	
 	$.ajax(	
 			{	
 				type: "POST",
-				url: "php/write_data.php",
+				url: "core/php/write_data.php",
 				data: "filename=" + filename + "&data=" + data + "&append=" + (append? 1 : 0) + "&ajax=1&byajax=1",
 				cache: false
 			}
