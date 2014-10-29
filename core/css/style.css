@@ -36,7 +36,7 @@ body {
 }
 
 
-#user-info .highlight, .question.highlight  {
+#participant-info .highlight, .question.highlight  {
     color: red !important;
 }
 
