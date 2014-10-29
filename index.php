@@ -24,7 +24,7 @@
 		<div><button class = "nav-button" id = "participant-info__nav">Verder</button></div>	
 	</div>
 	
-	<div id = "instructions" class = "section active" data-anchor = "Instructies">
+	<div id = "instructions" class = "section" data-anchor = "Instructies">
 		<?php include 'core/content/instructions.html';?>		
 		<div><button class = "nav-button" id = "instructions__nav">Verder</button></div>			
 	</div>	
