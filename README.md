@@ -17,3 +17,4 @@ The experiment was created for personal use (ongoing research), but anyone may u
 * Output is written to the 'output' folder, with one file for each participant. Make sure the experiment has write access to this folder!
 * Experiment logic is defined in core/js/associations.js
 * Instructions etc. are in Dutch, but code and comments are in English. To translate, change the files in core/content, and edit a couple of error messages in core/js/associations.js
+
