@@ -2,7 +2,7 @@ var timeAtStart;		//keep track of time at which the experiment start
 var participant;		//will contain user id, age, gender
 var filename;
 var cues;
-var debug = true;
+var debug = false;
 
 $(document).ready(function(){   	
 	
@@ -39,7 +39,7 @@ $(document).ready(function(){
     cues = getCues(); //defined in ../../input/cues.js
     
     if (debug) {
-    	participant = {name: "bram", age: "28", gender: 'm'};		
+    	participant = {name: "admin", age: "99", gender: 'x'};		
     	initWriting();
     	startAssociationTask();
     }
