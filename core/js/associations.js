@@ -90,9 +90,7 @@ function startAssociationTask() {
 			
 	});
 	
-	$("#associations__response").keyup(function (e) {
-//		if(e) e.preventDefault();
-		
+	$("#associations__response").keyup(function (e) {	
 		if (!firstKeypressRegistered) {
 			firstKeypressRegistered = true;
 			rtToKeypress = new Date().getTime() - RtStart;
