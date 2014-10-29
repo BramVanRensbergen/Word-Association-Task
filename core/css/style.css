@@ -12,11 +12,15 @@ body {
     text-align: left;
 }
 
-/* #goodbye td, #goodbye button { */
-/*     margin: 0px; */
-/* } */
+#instructions, #task, #goodbye {
+    display: none; /* hide all pages after the first*/
+}
 
 /* USER INFO */
+
+#participant-info {
+	margin-top: 5%;
+}
 
 #participant-info table{  
     border-spacing: 20px;   
@@ -38,6 +42,15 @@ body {
 
 #participant-info .highlight, .question.highlight  {
     color: red !important;
+}
+
+#participant-info__error {
+	color: red;
+}
+
+#goodbye {
+	text-align: center;
+	margin-top: 20%;
 }
 
 /* Nav Buttons */
