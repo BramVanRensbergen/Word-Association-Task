@@ -86,22 +86,22 @@ function startAssociationTask() {
 	
 	$('#associations__submit').bind('click',function(e) {		//triggered by 'enter' or clicking 'ok'
 		if(e) e.preventDefault();								//make sure we stay on this page
-		var association = $('#associations__response').val(); 		
-		if (association.length <= 1) {//ss did not fill in anything of use 	
-			$("#associations__error").html("Gelieve een associatie in te vullen!");	//show error message
-			$("#associations__response").focus();	//focus response box
-			$("#associations__response").select();
-		} else {
-			processAssociation(association); 	//write away response, move on
-		}		
+		processResponse();
+			
 	});
 	
-	$("#associations__response").keypress(function() {
+	$("#associations__response").keyup(function (e) {
+		if(e) e.preventDefault();
+		
 		if (!firstKeypressRegistered) {
 			firstKeypressRegistered = true;
 			rtToKeypress = new Date().getTime() - RtStart;
 		}
-	});
+		
+	    if (e.keyCode == 13) {
+	    	processResponse();
+	    }
+	});	
 	
 	$('#associations__skip').bind('click',function(e) {	
 		if(e) e.preventDefault();								//make sure we stay on this page
@@ -122,31 +122,38 @@ function startAssociationTask() {
 	/**
 	 * Write away response, move on to next association or cue.
 	 */	
-	function processAssociation(association) {
-		rtToSubmit = new Date().getTime() - RtStart;
-				
-		//start by saving the trial	
-		writeResponse(cue, trialNb, association, assoIndex, rtToKeypress, rtToSubmit);
-		
-		//allow for RT measurement of next association
-		firstKeypressRegistered = false;
-		RtStart = new Date().getTime(); 		
-		
-		$("#associations__skip").html("Geen Verdere Associaties");
-		resetElements();
-		
-		assoIndex++;
-		
-		//show next association, or next cue
-		if (assoIndex == 2) { //this was ss's first association
-			$("#associations__previous--1").text(association); //display this association while ss thinks of further associations
-			$("#associations__response").attr("placeholder", "Geef een tweede associatie");		
-		} else if (assoIndex == 3) { 	//this was ss's second association
-			$("#associations__previous--2").text(association); //display this association while ss thinks of further associations
-			$("#associations__response").attr("placeholder", "Geef een laatste associatie");
-		} else {			
-			showNextCue(); //pp gave three associations -> move to next cue
-		}	
+	function processResponse() {
+		var association = $('#associations__response').val(); 		
+		if (association.length <= 1) {//ss did not fill in anything of use 	
+			$("#associations__error").html("Gelieve een associatie in te vullen!");	//show error message
+			$("#associations__response").focus();	//focus response box
+			$("#associations__response").select();
+		} else {
+			rtToSubmit = new Date().getTime() - RtStart;
+			
+			//start by saving the trial	
+			writeResponse(cue, trialNb, association, assoIndex, rtToKeypress, rtToSubmit);
+			
+			//allow for RT measurement of next association
+			firstKeypressRegistered = false;
+			RtStart = new Date().getTime(); 		
+			
+			$("#associations__skip").html("Geen Verdere Associaties");
+			resetElements();
+			
+			assoIndex++;
+			
+			//show next association, or next cue
+			if (assoIndex == 2) { //this was ss's first association
+				$("#associations__previous--1").text(association); //display this association while ss thinks of further associations
+				$("#associations__response").attr("placeholder", "Geef een tweede associatie");		
+			} else if (assoIndex == 3) { 	//this was ss's second association
+				$("#associations__previous--2").text(association); //display this association while ss thinks of further associations
+				$("#associations__response").attr("placeholder", "Geef een laatste associatie");
+			} else {			
+				showNextCue(); //pp gave three associations -> move to next cue
+			}	
+		}			
 	}
 	
 	function resetElements() {
