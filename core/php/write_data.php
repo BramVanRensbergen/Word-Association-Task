@@ -6,6 +6,6 @@
 	} 
 	
  	$fh = fopen("../../output/".$_POST["filename"], $mode);
-	fwrite($fh, $_POST["data"]);
+	fwrite($fh, addslashes($_POST["data"]));
     fclose($fh); 
 ?>

@@ -217,7 +217,6 @@ function initWriting() {
 function writeResponse(cue, cueNb, association, associationNb, rtToKeypress, rtToSubmit) {		
 	var line = participant.name + "\t" + participant.age + "\t" + participant.gender + "\t" + timeAtStart + "\t" + getDateTime() + "\t"
 		+ cue + "\t" + cueNb + "\t" + association + "\t" + associationNb + "\t" + rtToKeypress + "\t" + rtToSubmit + "\n";
-	console.info(line)
 	writeToDisk(filename, line, true);	
 }
 
@@ -229,7 +228,7 @@ function writeToDisk(filename, data, append) {
 			{	
 				type: "POST",
 				url: "core/php/write_data.php",
-				data: "filename=" + filename + "&data=" + data + "&append=" + (append? 1 : 0) + "&ajax=1&byajax=1",
+				data: "filename=" + encodeURIComponent(filename) + "&data=" + encodeURIComponent(data) + "&append=" + (append? 1 : 0) + "&ajax=1&byajax=1",
 				cache: false
 			}
 	);
