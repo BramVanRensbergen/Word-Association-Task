@@ -2,7 +2,7 @@ var timeAtStart;		//keep track of time at which the experiment start
 var participant;		//will contain user id, age, gender
 var filename;
 var cues;
-var debug = true;
+var debug = false;
 
 $(document).ready(function(){   	    
 	$('#participant-info__nav').bind('click',function(e) {		
@@ -91,7 +91,7 @@ function startAssociationTask() {
 	});
 	
 	$("#associations__response").keyup(function (e) {
-		if(e) e.preventDefault();
+//		if(e) e.preventDefault();
 		
 		if (!firstKeypressRegistered) {
 			firstKeypressRegistered = true;
