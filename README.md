@@ -18,3 +18,4 @@ The experiment was created for personal use (ongoing research), but anyone may u
 * Experiment logic is defined in core/js/associations.js
 * Instructions etc. are in Dutch, but code and comments are in English. To translate, change the files in core/content, and edit a couple of error messages in core/js/associations.js
 
+The experiment should work in Firefox, Chrome, Internet Explorer (8+), and Opera (probably in Safari as well, but this has not been tested yet).
