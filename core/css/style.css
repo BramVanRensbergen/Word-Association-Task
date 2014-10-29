@@ -12,9 +12,9 @@ body {
     text-align: left;
 }
 
-#goodbye td, #goodbye button {
-    margin: 0px;
-}
+/* #goodbye td, #goodbye button { */
+/*     margin: 0px; */
+/* } */
 
 /* USER INFO */
 
@@ -94,7 +94,7 @@ button:focus {
 /* Association Task */
 
 
-.associations {
+#associations {
     color: #454445;
     text-align: center;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -105,46 +105,45 @@ button:focus {
     min-width: 234px;    
 }
 
-.associations__cue {
-    font-family: Georgia;
-    font-size: 2.5em;
-    font-weight: 700;
+#associations__cue {
+    font-size: 50px;
     padding-bottom: 20px;
 }
 
 .associations__previous {
     color: #c8c6cc;
-    font-family: Georgia;
+/*     font-family: Georgia; */
     margin-bottom: 5px;
     margin-top: 0;
     padding-bottom: 10px;
-    font-size: 1.4em;
+    font-size: 30px;
     line-height: 40px;
 }
 
-.associations__error {
+#associations__error {
     padding-bottom: 10px;
     color: #a94442;
 }
 
-.associations__response {
+#associations__response {
     background-color: #fff;
     background-image: none;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
     color: #555;
-    font-size: 14px;
+    font-size: 24px;
     height: 34px;
-    line-height: 1.42857;
-    padding: 0px 6px 0px 12px;
+    width: 300px;
+/*     line-height: 1.42857; */
+/*     padding: 0px 9px 0px 9px; */
+    padding: 3px 9px;
     transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    width: 250px;
     margin: 0;
 }
 
-.associations__submit {
-    min-width: 185px;
+#associations button {
+    width: 225px;
     font-weight: bolder;
     border: 1px solid #ccc;
     background-color: #fff;
