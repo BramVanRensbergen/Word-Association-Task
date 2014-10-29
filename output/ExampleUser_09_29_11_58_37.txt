@@ -1,0 +1,23 @@
+EMS	age	gender	timeAtStart	timeAtResponse	cue	cueNb	association	associationNb	rtToKeypress	rtToSubmit
+ExampleUser	30	male	09_29_11_58_37	09_29_11_59_56	mouse	1	answer 1	1	3110	10303
+ExampleUser	30	male	09_29_11_58_37	09_29_11_59_58	mouse	1	answer 2	2	566	2649
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_01	mouse	1	answer 3	3	600	2911
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_08	moose	2	A1	1	4824	6399
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_10	moose	2	__NO_FURTHER__	2	-1	-1
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_10	moose	2	__NO_FURTHER__	3	-1	-1
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_11	cat	3	__UNKNOWN__	1	-1	-1
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_11	cat	3	__UNKNOWN__	1	-1	-1
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_11	cat	3	__UNKNOWN__	1	-1	-1
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_13	lion	4	a1	1	2452	2616
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_14	lion	4	a2	2	225	401
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_14	lion	4	a3	3	177	525
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_15	dog	5	a1	1	392	796
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_16	dog	5	a2a	2	153	741
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_17	dog	5	a3	3	1013	1378
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_18	elephant	6	a4	1	626	985
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_20	elephant	6	a15dqw	2	389	1520
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_20	elephant	6	geq	3	198	376
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_21	rhino	7	dqw	1	425	578
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_21	rhino	7	d qw	2	210	334
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_21	rhino	7	dwq	3	226	353
+ExampleUser	30	male	09_29_11_58_37	09_29_12_00_23	rhino	7	hfwq	4	164	1506
