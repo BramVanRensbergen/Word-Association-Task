@@ -5,7 +5,10 @@ Author of this version: Bram Van Rensbergen (mail@bramvanrensbergen.com)
 
 Source: https://github.com/BramVanRensbergen/Word-Association-Task
 
+
 A small web-based word association task. Participants give up to three associations to a number of cue words. 
+
+
 The experiment was created for personal use (ongoing research), but anyone may use it if they like.
 
 * Participants see a word, and are asked to respond with whatever comes to mind upon seeing it.
