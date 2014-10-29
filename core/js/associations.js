@@ -2,29 +2,9 @@ var timeAtStart;		//keep track of time at which the experiment start
 var participant;		//will contain user id, age, gender
 var filename;
 var cues;
-var debug = false;
+var debug = true;
 
-$(document).ready(function(){   	
-	
-	//set the page scrolling
-    $('#content').fullpage({
-    	scrollingSpeed: 10,
-        resize : false,
-        easing: 'linear',
-        navigation: false,
-        scrollOverflow: true,
-        autoScrolling: true,
-        keyboardScrolling: false,
-        paddingTop: '30px',
-        paddingBottom: '30px',
-        afterLoad: function(anchorLink, index){  
-        	if (anchorLink != undefined) {
-        		document.title = anchorLink;    
-        	}
-        }
-    });
-    $.fn.fullpage.setAllowScrolling(false); //we only navigate using the next/previous buttons
-    
+$(document).ready(function(){   	    
 	$('#participant-info__nav').bind('click',function(e) {		
 		if (e) e.preventDefault();		
 		validateParticipantInfo(); //ss clicked ok -> validate their responses, if ok, move on to instructions		
@@ -32,6 +12,7 @@ $(document).ready(function(){
 	
 	$('#instructions__nav').bind('click',function(e) {		
 		if (e) e.preventDefault();
+		showPage("task");
 		startAssociationTask();
 	});
 
@@ -39,11 +20,16 @@ $(document).ready(function(){
     cues = getCues(); //defined in ../../input/cues.js
     
     if (debug) {
-    	participant = {name: "admin", age: "99", gender: 'x'};		
-    	initWriting();
-    	startAssociationTask();
+    	$("#name").val("admin");
+    	$("#age").val("99");
+    	$("#gender-male").click();
     }
 });
+
+function showPage(pageName) {
+	$(".page").hide();
+	$("#" + pageName).show();
+}
 
 /**
  * Check whether the participant info (id, age, gender) is entered correctly.
@@ -52,43 +38,34 @@ $(document).ready(function(){
  */
 function validateParticipantInfo() {
 	var allValid = true; //will be set to false if something was filled in incorrectly / not filled in
-	var errorString = ""; //we'll keep track of everything the user missed
 	
-	$('#user-info .highlight').removeClass("highlight"); //remove highlights of any previous entry
+	$('#participant-info .highlight').removeClass("highlight"); //remove highlights of any previous entry
 	
 	//check whether user info was entered correctly
 	var name = $("#name").val();
 	if (name.length < 3 || name.length == 0) {
 		allValid = false;
-		$("#name-label").addClass("highlight");
-		
-		if (name.length == 0) {
-			errorString += "Je hebt je EMS-nummer niet ingegeven!<br>";
-		} else if (name.length < 4) {
-			errorString += "Het EMS-nummer dat je ingegeven hebt is te kort!<br>";
-		}
+		$("#name-label").addClass("highlight");		
 	}	
 	
 	var age = $("#age").val();
 	if (age.length == 0) {
 		allValid = false;
 		$("#age-label").addClass("highlight");
-		errorString += "Je hebt je leeftijd niet ingegeven!<br>";
 	}	
 	
 	var gender = $('input[name=gender]:checked').val();
 	if (gender == undefined) {
 		allValid = false;
 		$("#gender-label").addClass("highlight");
-		errorString += "Je hebt je geslacht niet aangeduid!<br>";
 	}
 	
 	if (allValid) {
 		participant = {name: name, age: age, gender: gender};	
 		initWriting();
-		$.fn.fullpage.moveSectionDown();
+		showPage("instructions");
 	} else {
-		showMessage("Gelieve alle gegevens in te vullen!", errorString);
+		$("#participant-info__error").text("Gelieve alle informatie correct in te vullen!");		
 	}
 }
 
@@ -196,7 +173,7 @@ function startAssociationTask() {
 			$("#associations__cue").html(capitalizeFirst(cue));		
 			RtStart = new Date().getTime(); //reset RT			
 		} else {
-			$.fn.fullpage.moveSectionDown(); //finish experiment
+			showPage("goodbye");
 		}		
 	}
 	
@@ -239,7 +216,8 @@ function initWriting() {
  */
 function writeResponse(cue, cueNb, association, associationNb, rtToKeypress, rtToSubmit) {		
 	var line = participant.name + "\t" + participant.age + "\t" + participant.gender + "\t" + timeAtStart + "\t" + getDateTime() + "\t"
-		+ cue + "\t" + cueNb + "\t" + association + "\t" + associationNb + "\t" + rtToKeypress + "\t" + rtToSubmit + "\n";	
+		+ cue + "\t" + cueNb + "\t" + association + "\t" + associationNb + "\t" + rtToKeypress + "\t" + rtToSubmit + "\n";
+	console.info(line)
 	writeToDisk(filename, line, true);	
 }
 
