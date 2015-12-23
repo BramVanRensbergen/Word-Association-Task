@@ -1,19 +1,19 @@
-var timeAtStart;		//keep track of time at which the experiment start
-var participant;		//will contain user id, age, gender
-var filename;
-var cues;
-var debug = false;
+var timeAtStart;		// keep track of when the experiment started
+var participant;		// will contain user id, age, gender
+var filename;			// we will write the results to this file
+var cues;				// will hold the cue words that will be presented
+var debug = false;		// can be used during development to speed up the experiment
 
 $(document).ready(function(){   	    
-	$('#participant-info__nav').bind('click',function(e) {		
+	$('#participant-info__nav').bind('click',function(e) {	// button on the page where participant fills out their info
 		if (e) e.preventDefault();		
-		validateParticipantInfo(); //ss clicked ok -> validate their responses, if ok, move on to instructions		
+		validateParticipantInfo(); //participant clicked 'ok' -> validate their responses, if valid, move on to instructions		
 	});
 	
-	$('#instructions__nav').bind('click',function(e) {		
+	$('#instructions__nav').bind('click',function(e) {	// button on the page with instructions	
 		if (e) e.preventDefault();
 		showPage("task");
-		startAssociationTask();
+		startAssociationTask(); // start the experiment!
 	});
 
     timeAtStart = getDateTime();
@@ -26,13 +26,17 @@ $(document).ready(function(){
     }
 });
 
+
+/**
+ * Hide the current page, and show the indicated page instead.
+ */
 function showPage(pageName) {
 	$(".page").hide();
 	$("#" + pageName).show();
 }
 
 /**
- * Check whether the participant info (id, age, gender) is entered correctly.
+ * Check whether the participant's info (id, age, gender) is entered correctly.
  * If everything is in order, save the info, and move to the next section.
  * Otherwise, display an error.
  */
@@ -70,10 +74,10 @@ function validateParticipantInfo() {
 }
 
 /**
- * Begin the association task. Runs until all cues have been given three associations by user.
+ * Begin the association task. Runs until all cues have been given three associations by the participant.
  */
 function startAssociationTask() {
-	var cue = '';		//the cue the ss is giving associations to
+	var cue = '';		//the cue the participant is giving associations to
 	var trialNb = 0;	//trial number; 1 .. number of cues (i.e., 3 associations to each cue are all the same trial)
 	var assoIndex = 1;	//1, 2, or 3, depending on whether the association is the first, second, or third association to the current cue
 	
@@ -84,12 +88,15 @@ function startAssociationTask() {
 	var rtToKeypress = -1;
 	var firstKeypressRegistered = false;
 	
-	$('#associations__submit').bind('click',function(e) {		//triggered by 'enter' or clicking 'ok'
-		if(e) e.preventDefault();								//make sure we stay on this page
+	// submit the association, triggered by 'enter' or clicking 'ok'
+	$('#associations__submit').bind('click',function(e) {		
+		if(e) e.preventDefault(); //make sure we stay on this page
 		processResponse();
 			
 	});
 	
+	// record the first keypress, to measure reaction time
+	// when 'enter' is pressed, process the response
 	$("#associations__response").keyup(function (e) {	
 		if (!firstKeypressRegistered) {
 			firstKeypressRegistered = true;
@@ -101,6 +108,8 @@ function startAssociationTask() {
 	    }
 	});	
 	
+	// the 'skip' button can be used to skip the rest of this trial
+	// participant has been instructed to press this when they don't know the word, or don't have any further associations to the cue
 	$('#associations__skip').bind('click',function(e) {	
 		if(e) e.preventDefault();								//make sure we stay on this page
 

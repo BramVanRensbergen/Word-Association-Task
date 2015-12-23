@@ -6,7 +6,6 @@
 	<meta charset="UTF-8">
 	<title>Woord Associaties</title>	
 	<link rel="stylesheet" type="text/css" href="core/css/style.css">	
-<!-- 	<script type="text/javascript" src="core/external/jquery-2.1.1.min.js"></script>   -->
 	<script type="text/javascript" src="core/external/jquery-1.11.1.min.js"></script>  
 	<script type="text/javascript" src="input/cues.js"></script>
 	<script type="text/javascript" src="core/js/associations.js"></script>

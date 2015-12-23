@@ -1,4 +1,6 @@
 <?php 
+// write the data in $_POST["data"] to the file $_POST["filename"]
+
 	if ($_POST["append"]) {
 		$mode = "a";
 	} else {
